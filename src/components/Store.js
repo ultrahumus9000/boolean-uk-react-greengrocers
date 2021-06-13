@@ -19,6 +19,8 @@ function Store({
       <div className="store--item-icon">
         <img src={`../icons/${product.id}.svg`} alt="beetroot" />
       </div>
+      <p>£{product.price}</p>
+      <p>{product.name}</p>
       <button
         disabled={value(product)}
         onClick={() => {
@@ -35,7 +37,6 @@ function Store({
             };
             setCartItems([...cartItems, newCartItem]);
             newPrice = totalPrice + product.price;
-            // setTotalPrice(newPrice);
           } else {
             let filteredCartItems = cartItems.map((item) => {
               if (item.id === product.id) {
@@ -45,7 +46,6 @@ function Store({
               return item;
             });
             setCartItems(filteredCartItems);
-            // setTotalPrice(newPrice);
           }
           setTotalPrice(newPrice);
 

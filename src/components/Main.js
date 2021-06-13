@@ -43,7 +43,7 @@ function Main({
           <h3>Total</h3>
         </div>
         <div>
-          <span className="total-number">£{totalPrice}</span>
+          <span className="total-number">£{totalPrice.toFixed(2)}</span>
         </div>
       </div>
     </main>
