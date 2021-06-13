@@ -35,7 +35,7 @@ function Store({
             };
             setCartItems([...cartItems, newCartItem]);
             newPrice = totalPrice + product.price;
-            setTotalPrice(newPrice);
+            // setTotalPrice(newPrice);
           } else {
             let filteredCartItems = cartItems.map((item) => {
               if (item.id === product.id) {
@@ -45,8 +45,9 @@ function Store({
               return item;
             });
             setCartItems(filteredCartItems);
-            setTotalPrice(newPrice);
+            // setTotalPrice(newPrice);
           }
+          setTotalPrice(newPrice);
 
           let filteredProducts = products.map((item) => {
             if (item.id === product.id) {
