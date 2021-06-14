@@ -16,32 +16,29 @@ export default function App() {
 
   useEffect(()=>{}, [])
 
-  function addToCart() {
-    // If the item is not in the cart
-    // Add the item to cart and subtract from store's stock
+  function addToCart(product) {
+    let foundItem = cartItems.find((item) => {
+      return item.id === product.id;
+    });
 
     // If the item is already in the cart
     // Add to quantity and subtract from store's stock
-
-
-    let indexExist = cartItems.findIndex((item) => {
-      return item.id === product.id;
-    });
-  
-    if (indexExist < 0) {
-      let newCartItem = {
-        id: product.id,
-        quantity: 1,
-      };
-      setCartItems([...cartItems, newCartItem]);
-    } else {
+    if (foundItem) {
       let filteredCartItems = cartItems.map((item) => {
-        if (item.id === product.id) {
+        if (item.id === foundItem.id) {
           return (item = { ...item, quantity: item.quantity + 1 });
         }
         return item;
       });
       setCartItems(filteredCartItems);
+    } else {
+    // If the item is not in the cart
+    // Add the item to cart and subtract from store's stock
+      let newCartItem = {
+        id: product.id,
+        quantity: 1,
+      };
+      setCartItems([...cartItems, newCartItem]);
     }
   
     let filteredProducts = products.map((item) => {
@@ -58,43 +55,7 @@ export default function App() {
     setProducts(filteredProducts);
   }
   
-  function cartAddMore() {
-    let filteredCartItems = cartItems.map((item) => {
-      if (item.id === cartItem.id) {
-        if (item.quantity > 5) {
-          alert("no more stock");
-          return (item = { ...item, quantity: 5 });
-        } else {
-          return (item = {
-            ...item,
-            quantity: item.quantity + 1,
-          });
-        }
-      }
-      return item;
-    });
-  
-    let filteredProducts = products.map((product) => {
-      if (product.id === cartItem.id) {
-        if (product.amount <= 1) {
-          alert("No More Stock");
-          return (product = { ...product, amount: 0 });
-        } else {
-          return (product = { ...product, amount: product.amount - 1 });
-        }
-      } else return product;
-    });
-    setCartItems(filteredCartItems);
-    setProducts(filteredProducts);
-  }
-  
-  function removeFromCart(
-    cartItem,
-    cartItems,
-    products,
-    setCartItems,
-    setProducts
-  ) {
+  function removeFromCart(cartItem) {
     let filteredCartItems = cartItems.map((item) => {
       if (item.id === cartItem.id) {
         if (item.quantity <= 0) {
@@ -126,9 +87,16 @@ export default function App() {
     setProducts(filteredProducts);
   }
   
+  let total = 0;
+  for (const cartItem of cartItems) {
+    let targetProduct = products.find((product) => {
+      return product.id === cartItem.id;
+    });
+    total = total + targetProduct.price * cartItem.quantity;
+  }
 
   return <div className="App">
-    <Header products={products} setProducts = {setProducts} cartItems={cartItems} setCartItems ={setCartItems} />
-    <Main products={products}  cartItems={cartItems} setCartItems={setCartItems} setProducts = {setProducts} />
+    <Header products={products} addToCart={addToCart} />
+    <Main cartItems={cartItems} addToCart={addToCart} removeFromCart={removeFromCart} total={total} products={products} />
   </div>;
 }
