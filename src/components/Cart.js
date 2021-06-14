@@ -1,5 +1,3 @@
-import { removeCartItems } from "./reuseble";
-
 function Cart({
   cartItem,
   setProducts,
