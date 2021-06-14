@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Store from "./Store";
 
-function Header({ products, addToCart, addCartItemToServer }) {
+function Header({ products, setProducts, addCartItemToServer }) {
   const [selectedOption, setSelectedOption] = useState("high");
 
   let sortedProducts = [...products];
@@ -17,6 +17,18 @@ function Header({ products, addToCart, addCartItemToServer }) {
   }
   if (selectedOption === "A") {
     sortedProducts.sort((a, b) => (a.name < b.name ? 1 : -1));
+  }
+
+  function postToStore(object) {
+    return fetch("http://localhost:4000/store", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(object),
+    })
+      .then((resp) => resp.json())
+      .then((newProductFromServer) => {
+        setProducts([...products, newProductFromServer]);
+      });
   }
 
   return (
@@ -37,6 +49,33 @@ function Header({ products, addToCart, addCartItemToServer }) {
           <option value={"A"}>Name from Z-A</option>
         </select>
       </div>
+      <form
+        name="form"
+        className="new-form"
+        onSubmit={(e) => {
+          e.preventDefault();
+          let newObject = {
+            id: form.vegename.value,
+            name: form.vegename.value,
+            price: parseFloat(form.vegeprice.value),
+            amount: parseFloat(form.vegeamount.value),
+          };
+          // console.log(newObject);
+          postToStore(newObject).then(() => {
+            form.reset();
+          });
+        }}
+      >
+        <label> Add More Veges </label>
+        <input name="vegename" type="text"></input>
+        <label> Add Picture</label>
+        <input type="src"></input>
+        <label> Add Price</label>
+        <input name="vegeprice" step={0.1} precision={2} type="number"></input>
+        <label> Add Amount</label>
+        <input name="vegeamount" type="number"></input>
+        <button>Add</button>
+      </form>
       <ul className="item-list store--item-list">
         {sortedProducts.map((product, index) => {
           return (

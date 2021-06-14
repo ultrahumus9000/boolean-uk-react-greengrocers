@@ -22,6 +22,8 @@ function getCartInfo(){
 
 function addCartItemToServer(object){
   let updatedCart = cartItems.find(cart=>cart.id===object.id)
+  let updatedProduct = products.find(product=>product.id===object.id)
+  let updatedProductId = updatedProduct.id
   if(updatedCart&&updatedCart.quantity>=5){
     alert('no more stock')
     return
@@ -41,6 +43,20 @@ function addCartItemToServer(object){
           } return item
         })
         setCartItems(filteredCartItems)
+        fetch(`http://localhost:4000/store/${updatedProductId}`,{
+          method:'PATCH',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({
+            amount: updatedProduct.amount-1
+          })
+        }).then(resp=>resp.json()).then(productFromServer=>{
+          let filteredProducts = products.map((item)=>{
+            if(item.id===productFromServer.id){
+              return {...item, amount:productFromServer.amount }
+            } return item
+          })
+          setProducts(filteredProducts)
+        })
       })
   }else{
   return fetch('http://localhost:4000/cart',{
@@ -50,6 +66,21 @@ function addCartItemToServer(object){
     }).then(resp=>resp.json()).then((cartIteFromServer)=>{
       let filteredCartItems = [...cartItems, cartIteFromServer]
       setCartItems(filteredCartItems)
+      fetch(`http://localhost:4000/store/${updatedProductId}`,{
+          method:'PATCH',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({
+            amount: updatedProduct.amount-1
+          })
+        }).then(resp=>resp.json()).then(productFromServer=>{
+          let filteredProducts = products.map((item)=>{
+            if(item.id===productFromServer.id){
+              return {...item, amount:productFromServer.amount }
+            } return item
+          })
+          setProducts(filteredProducts)
+
+        })
     })
 }
 }
@@ -57,6 +88,8 @@ function addCartItemToServer(object){
 function reduceCartItemToServer(object){
   let updatedCart = cartItems.find(cart=>cart.id===object.id)
   let updatedCartId= updatedCart.id
+  let updatedProduct = products.find(product=>product.id===object.id)
+ 
   if(updatedCart.quantity>=2){
     return (fetch(`http://localhost:4000/cart/${updatedCartId}`,{
       method:'PATCH',
@@ -71,6 +104,22 @@ function reduceCartItemToServer(object){
           } return item
         })
         setCartItems(filteredCartItems)
+
+        fetch(`http://localhost:4000/store/${updatedCartId}`,{
+          method:'PATCH',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify({
+            amount: updatedProduct.amount+1
+          })
+        }).then(resp=>resp.json()).then(productFromServer=>{
+          let filteredProducts = products.map((item)=>{
+            if(item.id===productFromServer.id){
+              return {...item, amount:productFromServer.amount }
+            } return item
+          })
+          setProducts(filteredProducts)
+        })
+
       })
   }else{
   return fetch(`http://localhost:4000/cart/${updatedCartId}`,{
@@ -78,16 +127,34 @@ function reduceCartItemToServer(object){
     }).then(()=>{
       let filteredCartItems = cartItems.filter(item=>item.id !==updatedCartId)
       setCartItems(filteredCartItems)
+      
+      fetch(`http://localhost:4000/store/${updatedCartId}`,{
+        method:'PATCH',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({
+          amount: updatedProduct.amount+1
+        })
+      }).then(resp=>resp.json()).then(productFromServer=>{
+        let filteredProducts = products.map((item)=>{
+          if(item.id===productFromServer.id){
+            return {...item, amount:productFromServer.amount }
+          } return item
+        })
+        setProducts(filteredProducts)
+      })
+
+
     })    
   }
 }
 
 
-  useEffect(()=>{getStoreInfo().then(productsFromServer=>setProducts(productsFromServer))}, [])
+  useEffect(()=>{getStoreInfo().then(productsFromServer=>{
+    setProducts(productsFromServer)
+    getCartInfo().then(cartItemsFromServer=>setCartItems(cartItemsFromServer))
+  })}, [])
   
-  useEffect(()=>{getCartInfo().then(cartItemsFromServer=>setCartItems(cartItemsFromServer))}, [cartItems.length])
-
-
+  // useEffect(()=>{getCartInfo().then(cartItemsFromServer=>setCartItems(cartItemsFromServer))}, [])
 
   function addToCart(product) {
     let foundItem = cartItems.find((item) => {
@@ -171,7 +238,7 @@ function reduceCartItemToServer(object){
   }
 
   return <div className="App">
-    <Header products={products} addCartItemToServer={addCartItemToServer}/>
+    <Header products={products} addCartItemToServer={addCartItemToServer}  setProducts={ setProducts}/>
     <Main cartItems={cartItems} total={total} products={products} addCartItemToServer={addCartItemToServer} reduceCartItemToServer={reduceCartItemToServer}/>
   </div>;
 }

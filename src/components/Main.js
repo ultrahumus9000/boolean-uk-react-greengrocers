@@ -24,6 +24,8 @@ function Main({
               (product) => product.id === item.id
             );
             console.log(targetProduct);
+            console.log(cartItems);
+            console.log(products);
             return (
               <Cart
                 key={index}

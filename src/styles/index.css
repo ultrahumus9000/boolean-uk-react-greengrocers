@@ -4,6 +4,7 @@
 
 body {
   font-family: "Trebuchet MS", "Lucida Sans", Arial, sans-serif;
+  position: relative;
 }
 
 h1,
@@ -11,6 +12,24 @@ h2 {
   margin-bottom: 1rem;
 }
 
+.new-form {
+  display: grid;
+  width: 200px;
+  margin: 20px;
+  position: fixed;
+  z-index: 1;
+  left: 5px;
+  background-color: mediumslateblue;
+  color: #e7f4ea;
+  padding: 20px;
+  border-radius: 10px;
+  justify-content: center;
+}
+.new-form button {
+  background-color: lightseagreen;
+  border: none;
+  margin-top: 10px;
+}
 /* Buttons */
 
 button {
@@ -25,9 +44,7 @@ button {
 #store {
   height: 40vh;
   padding: 1rem;
-
   overflow-y: scroll;
-
   background-color: #e7f4ea;
 }
 
