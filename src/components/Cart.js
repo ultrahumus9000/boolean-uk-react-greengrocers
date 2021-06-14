@@ -27,42 +27,42 @@ function Cart({
       <button
         className="quantity-btn remove-btn center"
         onClick={() => {
-          removeCartItems(
-            cartItem,
-            cartItems,
-            products,
-            setCartItems,
-            setProducts
-          );
-          // let filteredCartItems = cartItems.map((item) => {
-          //   if (item.id === cartItem.id) {
-          //     if (item.quantity <= 0) {
-          //       return (item = { ...item, quantity: 0 });
-          //     } else {
-          //       return (item = {
-          //         ...item,
-          //         quantity: item.quantity - 1,
-          //       });
-          //     }
-          //   }
-          //   return item;
-          // });
+          // removeCartItems(
+          //   cartItem,
+          //   cartItems,
+          //   products,
+          //   setCartItems,
+          //   setProducts
+          // );
+          let filteredCartItems = cartItems.map((item) => {
+            if (item.id === cartItem.id) {
+              if (item.quantity <= 0) {
+                return (item = { ...item, quantity: 0 });
+              } else {
+                return (item = {
+                  ...item,
+                  quantity: item.quantity - 1,
+                });
+              }
+            }
+            return item;
+          });
 
-          // filteredCartItems = filteredCartItems.filter((item) => {
-          //   return item.quantity !== 0;
-          // });
+          filteredCartItems = filteredCartItems.filter((item) => {
+            return item.quantity !== 0;
+          });
 
-          // let filteredProducts = products.map((product) => {
-          //   if (product.id === cartItem.id) {
-          //     if (product.amount >= 5) {
-          //       return (product = { ...product, amount: 5 });
-          //     } else {
-          //       return (product = { ...product, amount: product.amount + 1 });
-          //     }
-          //   } else return product;
-          // });
-          // setCartItems(filteredCartItems);
-          // setProducts(filteredProducts);
+          let filteredProducts = products.map((product) => {
+            if (product.id === cartItem.id) {
+              if (product.amount >= 5) {
+                return (product = { ...product, amount: 5 });
+              } else {
+                return (product = { ...product, amount: product.amount + 1 });
+              }
+            } else return product;
+          });
+          setCartItems(filteredCartItems);
+          setProducts(filteredProducts);
         }}
       >
         -
