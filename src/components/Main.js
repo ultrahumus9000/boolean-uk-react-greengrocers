@@ -1,16 +1,7 @@
 import { useState } from "react";
 import Cart from "./Cart";
 
-function Main({ cartItems, setCartItems, setProducts, products }) {
-  console.log(cartItems);
-  let total = 0;
-  for (const cartItem of cartItems) {
-    let targetProduct = products.find((product) => {
-      return product.id === cartItem.id;
-    });
-    total = total + targetProduct.price * cartItem.quantity;
-  }
-
+function Main({ cartItems, addToCart, removeFromCart, total, products }) {
   return (
     <main id="cart">
       <h2>Your Cart</h2>
@@ -23,18 +14,15 @@ function Main({ cartItems, setCartItems, setProducts, products }) {
             <span>Quantity</span>{" "}
           </li>
           {cartItems.map((item, index) => {
-            let targetProduct = products.find((product) => {
-              return product.id === item.id;
-            });
-
+            const targetProduct = products.find(
+              (product) => product.id === item.id
+            );
             return (
               <Cart
                 key={index}
                 cartItem={item}
-                setCartItems={setCartItems}
-                products={products}
-                setProducts={setProducts}
-                cartItems={cartItems}
+                addToCart={addToCart}
+                removeFromCart={removeFromCart}
                 targetProduct={targetProduct}
               />
             );

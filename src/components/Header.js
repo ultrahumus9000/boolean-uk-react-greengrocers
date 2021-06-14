@@ -1,28 +1,22 @@
 import { useState } from "react";
 import Store from "./Store";
 
-function Header({ products, setProducts, cartItems, setCartItems }) {
+function Header({ products, addToCart }) {
   const [selectedOption, setSelectedOption] = useState("high");
 
+  let sortedProducts = [...products];
+
   if (selectedOption === "high") {
-    let filteredProducts = products.sort((a, b) =>
-      a.price < b.price ? 1 : -1
-    );
-    setProducts(filteredProducts);
+    sortedProducts.sort((a, b) => (a.price < b.price ? 1 : -1));
   }
   if (selectedOption === "low") {
-    let filteredProducts = products.sort((a, b) =>
-      a.price > b.price ? 1 : -1
-    );
-    setProducts(filteredProducts);
+    sortedProducts.sort((a, b) => (a.price > b.price ? 1 : -1));
   }
   if (selectedOption === "Z") {
-    let filteredProducts = products.sort((a, b) => (a.name > b.name ? 1 : -1));
-    setProducts(filteredProducts);
+    sortedProducts.sort((a, b) => (a.name > b.name ? 1 : -1));
   }
   if (selectedOption === "A") {
-    let filteredProducts = products.sort((a, b) => (a.name < b.name ? 1 : -1));
-    setProducts(filteredProducts);
+    sortedProducts.sort((a, b) => (a.name < b.name ? 1 : -1));
   }
 
   return (
@@ -44,17 +38,8 @@ function Header({ products, setProducts, cartItems, setCartItems }) {
         </select>
       </div>
       <ul className="item-list store--item-list">
-        {products.map((product, index) => {
-          return (
-            <Store
-              key={index}
-              product={product}
-              setProducts={setProducts}
-              cartItems={cartItems}
-              setCartItems={setCartItems}
-              products={products}
-            />
-          );
+        {sortedProducts.map((product, index) => {
+          return <Store key={index} product={product} addToCart={addToCart} />;
         })}
       </ul>
     </header>
