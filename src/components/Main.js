@@ -1,7 +1,13 @@
 import { useState } from "react";
 import Cart from "./Cart";
 
-function Main({ cartItems, addToCart, removeFromCart, total, products }) {
+function Main({
+  cartItems,
+  total,
+  products,
+  addCartItemToServer,
+  reduceCartItemToServer,
+}) {
   return (
     <main id="cart">
       <h2>Your Cart</h2>
@@ -17,12 +23,13 @@ function Main({ cartItems, addToCart, removeFromCart, total, products }) {
             const targetProduct = products.find(
               (product) => product.id === item.id
             );
+            console.log(targetProduct);
             return (
               <Cart
                 key={index}
                 cartItem={item}
-                addToCart={addToCart}
-                removeFromCart={removeFromCart}
+                addCartItemToServer={addCartItemToServer}
+                reduceCartItemToServer={reduceCartItemToServer}
                 targetProduct={targetProduct}
               />
             );

@@ -1,10 +1,16 @@
-function Cart({ cartItem, addToCart, removeFromCart, targetProduct }) {
+function Cart({
+  cartItem,
+  addCartItemToServer,
+  reduceCartItemToServer,
+  targetProduct,
+}) {
   function disabledMoreThan(cartItem) {
     if (cartItem.quantity >= 5) {
       return true;
     }
     return false;
   }
+  console.log(targetProduct);
 
   return (
     <li className="list-bottom">
@@ -17,7 +23,9 @@ function Cart({ cartItem, addToCart, removeFromCart, targetProduct }) {
       <p>{targetProduct.price}</p>
       <button
         className="quantity-btn remove-btn center"
-        onClick={() => removeFromCart(cartItem)}
+        onClick={() => {
+          reduceCartItemToServer(cartItem);
+        }}
       >
         -
       </button>
@@ -25,7 +33,9 @@ function Cart({ cartItem, addToCart, removeFromCart, targetProduct }) {
       <button
         className="quantity-btn add-btn center"
         disabled={disabledMoreThan(cartItem)}
-        onClick={() => addToCart(cartItem)}
+        onClick={() => {
+          addCartItemToServer(cartItem);
+        }}
       >
         +
       </button>

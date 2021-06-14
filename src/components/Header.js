@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Store from "./Store";
 
-function Header({ products, addToCart }) {
+function Header({ products, addToCart, addCartItemToServer }) {
   const [selectedOption, setSelectedOption] = useState("high");
 
   let sortedProducts = [...products];
@@ -39,7 +39,13 @@ function Header({ products, addToCart }) {
       </div>
       <ul className="item-list store--item-list">
         {sortedProducts.map((product, index) => {
-          return <Store key={index} product={product} addToCart={addToCart} />;
+          return (
+            <Store
+              key={index}
+              product={product}
+              addCartItemToServer={addCartItemToServer}
+            />
+          );
         })}
       </ul>
     </header>

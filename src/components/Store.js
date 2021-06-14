@@ -1,4 +1,4 @@
-function Store({ product, addToCart }) {
+function Store({ product, addCartItemToServer }) {
   // console.log(product.id);
 
   function value(product) {
@@ -13,7 +13,13 @@ function Store({ product, addToCart }) {
       </div>
       <p>£{product.price}</p>
       <p>{product.name}</p>
-      <button disabled={value(product)} onClick={() => addToCart(product)}>
+      <button
+        disabled={value(product)}
+        onClick={() => {
+          let object = { id: product.id, quantity: 1 };
+          addCartItemToServer(object);
+        }}
+      >
         Add to cart
       </button>
     </li>

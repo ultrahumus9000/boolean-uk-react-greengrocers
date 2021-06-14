@@ -3,18 +3,91 @@ import { useEffect, useState } from "react";
 
 import Main from "./components/Main";
 import Header from "./components/Header";
-import inititalStoreFoods from "./storeinfo"
 
 import "./styles/index.css";
 
 
 export default function App() {
-  const [products, setProducts]= useState(inititalStoreFoods)
+  const [products, setProducts]= useState([])
   const [cartItems, setCartItems] = useState([])
 
   // const [totalPrice, setTotalPrice] = useState(0.0); because we can just calculate it 
+function getStoreInfo(){
+ return fetch('http://localhost:4000/store').then(resp=>resp.json())
+}
 
-  useEffect(()=>{}, [])
+function getCartInfo(){
+  return fetch('http://localhost:4000/cart').then(resp=>resp.json())
+ }
+
+function addCartItemToServer(object){
+  let updatedCart = cartItems.find(cart=>cart.id===object.id)
+  if(updatedCart&&updatedCart.quantity>=5){
+    alert('no more stock')
+    return
+  }
+  if(updatedCart&&updatedCart.quantity<5){
+    let updatedCartId= updatedCart.id
+    return (fetch(`http://localhost:4000/cart/${updatedCartId}`,{
+      method:'PATCH',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        quantity: updatedCart.quantity+1
+      })
+      }).then(resp=>resp.json())).then((cartIteFromServer)=>{
+        let filteredCartItems = cartItems.map((item)=>{
+          if(item.id===cartIteFromServer.id){
+            return {...item, quantity:cartIteFromServer.quantity }
+          } return item
+        })
+        setCartItems(filteredCartItems)
+      })
+  }else{
+  return fetch('http://localhost:4000/cart',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify(object)
+    }).then(resp=>resp.json()).then((cartIteFromServer)=>{
+      let filteredCartItems = [...cartItems, cartIteFromServer]
+      setCartItems(filteredCartItems)
+    })
+}
+}
+
+function reduceCartItemToServer(object){
+  let updatedCart = cartItems.find(cart=>cart.id===object.id)
+  let updatedCartId= updatedCart.id
+  if(updatedCart.quantity>=2){
+    return (fetch(`http://localhost:4000/cart/${updatedCartId}`,{
+      method:'PATCH',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        quantity: updatedCart.quantity-1
+      })
+      }).then(resp=>resp.json())).then((cartIteFromServer)=>{
+        let filteredCartItems = cartItems.map((item)=>{
+          if(item.id===cartIteFromServer.id){
+            return {...item, quantity:cartIteFromServer.quantity }
+          } return item
+        })
+        setCartItems(filteredCartItems)
+      })
+  }else{
+  return fetch(`http://localhost:4000/cart/${updatedCartId}`,{
+    method:'DELETE'
+    }).then(()=>{
+      let filteredCartItems = cartItems.filter(item=>item.id !==updatedCartId)
+      setCartItems(filteredCartItems)
+    })    
+  }
+}
+
+
+  useEffect(()=>{getStoreInfo().then(productsFromServer=>setProducts(productsFromServer))}, [])
+  
+  useEffect(()=>{getCartInfo().then(cartItemsFromServer=>setCartItems(cartItemsFromServer))}, [cartItems.length])
+
+
 
   function addToCart(product) {
     let foundItem = cartItems.find((item) => {
@@ -92,11 +165,13 @@ export default function App() {
     let targetProduct = products.find((product) => {
       return product.id === cartItem.id;
     });
-    total = total + targetProduct.price * cartItem.quantity;
+    if(targetProduct){
+      total = total + targetProduct.price * cartItem.quantity
+    }
   }
 
   return <div className="App">
-    <Header products={products} addToCart={addToCart} />
-    <Main cartItems={cartItems} addToCart={addToCart} removeFromCart={removeFromCart} total={total} products={products} />
+    <Header products={products} addCartItemToServer={addCartItemToServer}/>
+    <Main cartItems={cartItems} total={total} products={products} addCartItemToServer={addCartItemToServer} reduceCartItemToServer={reduceCartItemToServer}/>
   </div>;
 }
