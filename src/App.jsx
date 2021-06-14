@@ -12,10 +12,10 @@ export default function App() {
 
 const [products, setProducts]= useState(inititalStoreFoods)
 const [cartItems, setCartItems] = useState([])
-const [totalPrice, setTotalPrice] = useState(0.0);
+// const [totalPrice, setTotalPrice] = useState(0.0); because we can just calculate it 
 
   return <div className="App">
-    <Header products={products} setProducts = {setProducts} cartItems={cartItems} setCartItems ={setCartItems} totalPrice={totalPrice} setTotalPrice ={setTotalPrice}/>
-    <Main products={products}  cartItems={cartItems} setCartItems={setCartItems} setProducts = {setProducts} setTotalPrice ={setTotalPrice} totalPrice ={totalPrice}/>
+    <Header products={products} setProducts = {setProducts} cartItems={cartItems} setCartItems ={setCartItems} />
+    <Main products={products}  cartItems={cartItems} setCartItems={setCartItems} setProducts = {setProducts} />
   </div>;
 }

@@ -1,22 +1,15 @@
+import { removeCartItems } from "./reuseble";
+
 function Cart({
   cartItem,
   setProducts,
   setCartItems,
-  totalPrice,
-  setTotalPrice,
   products,
   cartItems,
   targetProduct,
 }) {
   function disabledMoreThan(cartItem) {
     if (cartItem.quantity >= 5) {
-      return true;
-    }
-    return false;
-  }
-
-  function disabledLessThan(cartItem) {
-    if (cartItem.quantity <= 0) {
       return true;
     }
     return false;
@@ -33,36 +26,43 @@ function Cart({
       <p>{targetProduct.price}</p>
       <button
         className="quantity-btn remove-btn center"
-        disabled={disabledLessThan(cartItem)}
         onClick={() => {
-          let newPrice = totalPrice;
-          let filteredCartItems = cartItems.map((item) => {
-            if (item.id === cartItem.id) {
-              if (item.quantity <= 0) {
-                return (item = { ...item, quantity: 0 });
-              } else {
-                newPrice = newPrice - targetProduct.price;
-                return (item = {
-                  ...item,
-                  quantity: item.quantity - 1,
-                });
-              }
-            }
-            return item;
-          });
+          removeCartItems(
+            cartItem,
+            cartItems,
+            products,
+            setCartItems,
+            setProducts
+          );
+          // let filteredCartItems = cartItems.map((item) => {
+          //   if (item.id === cartItem.id) {
+          //     if (item.quantity <= 0) {
+          //       return (item = { ...item, quantity: 0 });
+          //     } else {
+          //       return (item = {
+          //         ...item,
+          //         quantity: item.quantity - 1,
+          //       });
+          //     }
+          //   }
+          //   return item;
+          // });
 
-          let filteredProducts = products.map((product) => {
-            if (product.id === cartItem.id) {
-              if (product.amount >= 5) {
-                return (product = { ...product, amount: 5 });
-              } else {
-                return (product = { ...product, amount: product.amount + 1 });
-              }
-            } else return product;
-          });
-          setCartItems(filteredCartItems);
-          setTotalPrice(newPrice);
-          setProducts(filteredProducts);
+          // filteredCartItems = filteredCartItems.filter((item) => {
+          //   return item.quantity !== 0;
+          // });
+
+          // let filteredProducts = products.map((product) => {
+          //   if (product.id === cartItem.id) {
+          //     if (product.amount >= 5) {
+          //       return (product = { ...product, amount: 5 });
+          //     } else {
+          //       return (product = { ...product, amount: product.amount + 1 });
+          //     }
+          //   } else return product;
+          // });
+          // setCartItems(filteredCartItems);
+          // setProducts(filteredProducts);
         }}
       >
         -
@@ -72,14 +72,12 @@ function Cart({
         className="quantity-btn add-btn center"
         disabled={disabledMoreThan(cartItem)}
         onClick={() => {
-          let newPrice = totalPrice;
           let filteredCartItems = cartItems.map((item) => {
             if (item.id === cartItem.id) {
               if (item.quantity > 5) {
                 alert("no more stock");
                 return (item = { ...item, quantity: 5 });
               } else {
-                newPrice = newPrice + targetProduct.price;
                 return (item = {
                   ...item,
                   quantity: item.quantity + 1,
@@ -100,7 +98,6 @@ function Cart({
             } else return product;
           });
           setCartItems(filteredCartItems);
-          setTotalPrice(newPrice);
           setProducts(filteredProducts);
         }}
       >

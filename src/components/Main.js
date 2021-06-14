@@ -1,15 +1,15 @@
 import { useState } from "react";
 import Cart from "./Cart";
 
-function Main({
-  cartItems,
-  setCartItems,
-  setProducts,
-  totalPrice,
-  setTotalPrice,
-  products,
-}) {
+function Main({ cartItems, setCartItems, setProducts, products }) {
   console.log(cartItems);
+  let total = 0;
+  for (const cartItem of cartItems) {
+    let targetProduct = products.find((product) => {
+      return product.id === cartItem.id;
+    });
+    total = total + targetProduct.price * cartItem.quantity;
+  }
 
   return (
     <main id="cart">
@@ -34,8 +34,6 @@ function Main({
                 setCartItems={setCartItems}
                 products={products}
                 setProducts={setProducts}
-                totalPrice={totalPrice}
-                setTotalPrice={setTotalPrice}
                 cartItems={cartItems}
                 targetProduct={targetProduct}
               />
@@ -48,7 +46,7 @@ function Main({
           <h3>Total</h3>
         </div>
         <div>
-          <span className="total-number">£{totalPrice.toFixed(2)}</span>
+          <span className="total-number">£{total.toFixed(2)}</span>
         </div>
       </div>
     </main>

@@ -1,14 +1,7 @@
 import { useState } from "react";
 import Store from "./Store";
 
-function Header({
-  products,
-  setProducts,
-  cartItems,
-  setCartItems,
-  setTotalPrice,
-  totalPrice,
-}) {
+function Header({ products, setProducts, cartItems, setCartItems }) {
   const [selectedOption, setSelectedOption] = useState("high");
 
   if (selectedOption === "high") {
@@ -60,8 +53,6 @@ function Header({
               cartItems={cartItems}
               setCartItems={setCartItems}
               products={products}
-              setTotalPrice={setTotalPrice}
-              totalPrice={totalPrice}
             />
           );
         })}
