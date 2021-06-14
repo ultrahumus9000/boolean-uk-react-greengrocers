@@ -23,6 +23,10 @@ function Main({
             <span>Quantity</span>{" "}
           </li>
           {cartItems.map((item, index) => {
+            let targetProduct = products.find((product) => {
+              return product.id === item.id;
+            });
+
             return (
               <Cart
                 key={index}
@@ -33,6 +37,7 @@ function Main({
                 totalPrice={totalPrice}
                 setTotalPrice={setTotalPrice}
                 cartItems={cartItems}
+                targetProduct={targetProduct}
               />
             );
           })}

@@ -31,9 +31,7 @@ function Store({
           if (indexExist < 0) {
             let newCartItem = {
               id: product.id,
-              name: product.name,
               quantity: 1,
-              price: product.price,
             };
             setCartItems([...cartItems, newCartItem]);
             newPrice = totalPrice + product.price;

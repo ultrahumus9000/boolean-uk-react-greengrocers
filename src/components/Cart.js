@@ -6,6 +6,7 @@ function Cart({
   setTotalPrice,
   products,
   cartItems,
+  targetProduct,
 }) {
   function disabledMoreThan(cartItem) {
     if (cartItem.quantity >= 5) {
@@ -28,8 +29,8 @@ function Cart({
         src={`../icons/${cartItem.id}.svg`}
         alt="beetroot"
       />
-      <p>{cartItem.name}</p>
-      <p>{cartItem.price}</p>
+      <p>{targetProduct.name}</p>
+      <p>{targetProduct.price}</p>
       <button
         className="quantity-btn remove-btn center"
         disabled={disabledLessThan(cartItem)}
@@ -40,7 +41,7 @@ function Cart({
               if (item.quantity <= 0) {
                 return (item = { ...item, quantity: 0 });
               } else {
-                newPrice = newPrice - item.price;
+                newPrice = newPrice - targetProduct.price;
                 return (item = {
                   ...item,
                   quantity: item.quantity - 1,
@@ -78,7 +79,7 @@ function Cart({
                 alert("no more stock");
                 return (item = { ...item, quantity: 5 });
               } else {
-                newPrice = newPrice + item.price;
+                newPrice = newPrice + targetProduct.price;
                 return (item = {
                   ...item,
                   quantity: item.quantity + 1,
